@@ -1,10 +1,11 @@
 <template>
     <div id="xtVueDropdown">
-      <div id="dropdownButton" @click="toggle">dropdownMenu</div>
+      <div id="dropdownButton" @click="toggle">{{selectedText}}</div>
       <div id="dropdownMenu" v-show="ifShow">
-        <div class="dropdownList">one</div>
-        <div class="dropdownList">two</div>
-        <div class="dropdownList">three</div>
+        <div class="dropdownList" v-for="item in listText" @click="select(item)">{{item}}</div>
+        <!--<div class="dropdownList">one</div>-->
+        <!--<div class="dropdownList">two</div>-->
+        <!--<div class="dropdownList">three</div>-->
       </div>
     </div>
 </template>
@@ -14,13 +15,27 @@
         name: "xt-vue-dropdown",
         data(){
           return {
-            ifShow: false
+            ifShow: false,
+          }
+        },
+        props: {
+          selectedText: {
+            type: String,
+            default: 'please choose'
+          },
+          listText: {
+            type: Array,
+            default: []
           }
         },
         methods: {
           toggle(){
             this.ifShow = !this.ifShow;
-          }
+          },
+          select(text){
+            this.selectedText = text;
+            this.ifShow = false;
+          },
         }
     }
 </script>
@@ -29,6 +44,10 @@
   #xtVueDropdown {
     position:relative;
     text-align: left;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
   #dropdownButton {
     display: inline-block;
@@ -42,6 +61,7 @@
     color: #4e555b;
     white-space: nowrap;
     cursor: pointer;
+
   }
   #dropdownMenu {
     position: absolute;
@@ -58,5 +78,6 @@
     -moz-border-radius: 6px;
     border-radius: 6px;
     padding: 0px 20px;
+    cursor: pointer;
   }
 </style>
