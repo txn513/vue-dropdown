@@ -3,9 +3,6 @@
       <div id="dropdownButton" @click="toggle">{{selectedText}}</div>
       <div id="dropdownMenu" v-show="ifShow">
         <div class="dropdownList" v-for="item in listText" @click="select(item)">{{item}}</div>
-        <!--<div class="dropdownList">one</div>-->
-        <!--<div class="dropdownList">two</div>-->
-        <!--<div class="dropdownList">three</div>-->
       </div>
     </div>
 </template>
@@ -40,7 +37,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   #xtVueDropdown {
     position:relative;
     text-align: left;
@@ -61,7 +58,9 @@
     color: #4e555b;
     white-space: nowrap;
     cursor: pointer;
-
+    &:hover {
+      background-color: #f8f8f8;
+    }
   }
   #dropdownMenu {
     position: absolute;
@@ -77,7 +76,15 @@
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
-    padding: 0px 20px;
+    /*padding: 0px 20px;*/
     cursor: pointer;
+    .dropdownList {
+      padding: 0px 20px;
+      height: 30px;
+      line-height: 30px;
+      &:hover {
+        background-color: #f8f8f8;
+      }
+    }
   }
 </style>
