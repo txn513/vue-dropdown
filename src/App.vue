@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <xt-vue-dropdown :selected-text=selectText :list-text=listText></xt-vue-dropdown>
+    <!--<xt-vue-dropdown :selected-text=selectText :list-text=ungroupedListText></xt-vue-dropdown>-->
+    <xt-vue-dropdown grouped :placeholder=selectText :grouped-data=groupedListText></xt-vue-dropdown>
+
   </div>
 </template>
 
@@ -11,10 +13,20 @@ export default {
   data(){
     return {
       selectText: 'hahahah',
-      listText: [
+      ungroupedListText: [
         'tone',
         'ttwo',
         'tthree',
+      ],
+      groupedListText: [
+        {
+          groupName: 'group1',
+          groupList: ['aaa','bbbb']
+        },
+        {
+          groupName: 'group2',
+          groupList: ['ccc','ddd']
+        }
       ]
     }
   }
