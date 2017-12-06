@@ -1,12 +1,17 @@
 <template>
     <div id="xtVueDropdown">
-      <div id="dropdownButton" @click="toggle">{{selectedText}}</div>
+      <div id="dropdownButton" @click="toggle">{{placeholder}}</div>
       <div id="dropdownMenu" v-show="ifShow">
-        <div v-if="!grouped" class="dropdownList" v-for="item in listText" @click="select(item)">{{item}}</div>
-        <div v-if="grouped" id="grouped">
-            <div class="innerGroup" v-for="item in groupedData">
+        <div v-if="!dropdownData.grouped" class="dropdownList" v-for="item in dropdownData.data" @click="select(item)">{{item}}</div>
+        <div v-if="dropdownData.grouped" id="grouped">
+            <div class="innerGroup" v-for="(item,index) in dropdownData.data">
               <div class="groupName">{{item.groupName}}</div>
-              <div class="groupList" v-for="listItem in item.groupList" @click="select(listItem)">{{listItem}}</div>
+              <div class="groupList"
+                   v-for="(listItem,listItemIndex) in item.groupList"
+                   @click="groupSelect(listItem,index,listItemIndex)"
+                   :class="{'selected': groupIndex == index&&groupListIndex == listItemIndex}">
+                {{listItem}}
+              </div>
             </div>
         </div>
       </div>
@@ -19,26 +24,22 @@
         data(){
           return {
             ifShow: false,
-            selected: '',
+            selectedText: '',
+
+            //
+            groupIndex: -1,
+            groupListIndex: -1,
           }
         },
         props: {
+          dropdownData: {
+            type: Object,
+            default: () => {}
+          },
           grouped: {
             type: Boolean,
             default: false
           },
-          placeholder: {
-            type: String,
-            default: 'please choose'
-          },
-          listText: {
-            type: Array,
-            default: () => []
-          },
-          groupedData: {
-            type: Array,
-            default: () => []
-          }
         },
         methods: {
           toggle(){
@@ -48,25 +49,31 @@
             console.log(e.target);
           },
           select(text){
-            this.selected = text;
+            this.selectedText = text;
             this.ifShow = false;
+          },
+          groupSelect(text, groupIndex, groupListIndex){
+            this.groupIndex = groupIndex;
+            this.groupListIndex = groupListIndex;
+            this.select(text);
           },
         },
       computed: {
-        selectedText(){
-          // this.selected =  this.placeholder;
-          return this.selected;
+        placeholder(){
+          return this.selectedText;
         }
       },
       mounted(){
-          this.selected =  this.placeholder
-          // console.log(this.grouped)grouped
+          this.selectedText =  this.dropdownData.placeholder
           document.addEventListener('click',this.hide, false)
       }
     }
 </script>
 
 <style scoped lang="scss">
+  $hover-color: #eeeeee;
+  $selected-color: #c3c3c3;
+
   #xtVueDropdown {
     position:relative;
     text-align: left;
@@ -90,13 +97,14 @@
     cursor: pointer;
     font-size: 16px;
     &:hover {
-      background-color: #f8f8f8;
+      background-color: $hover-color;
     }
   }
   #dropdownMenu {
     position: absolute;
     left: 0;
     top: 0;
+
     -webkit-transform: translate(0,44px);
     -moz-transform: translate(0,44px);
     -ms-transform: translate(0,44px);
@@ -111,14 +119,21 @@
     z-index: 100;
     /*padding: 0px 20px;*/
     cursor: pointer;
+
     .dropdownList {
       padding: 0px 20px;
       height: 30px;
       line-height: 30px;
       font-size: 16px;
       &:hover {
-        background-color: #f8f8f8;
+        background-color: $hover-color;
       }
+      &.selected {
+        background-color: $selected-color;
+      }
+    }
+    #grouped {
+      padding-bottom: 10px;
     }
     .innerGroup {
       padding: 0 10px;
@@ -133,6 +148,16 @@
         font-size: 16px;
         height: 40px;
         line-height: 40px;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        padding: 0 4px;
+        &:hover {
+          background-color: $hover-color;
+        }
+        &.selected {
+          background-color: $selected-color;
+        }
       }
     }
   }
